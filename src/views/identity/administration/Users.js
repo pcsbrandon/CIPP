@@ -94,6 +94,13 @@ const Offcanvas = (row, rowIndex, formatExtraData) => {
             modalMessage: 'Are you sure you want to convert this user to a shared mailbox?',
           },
           {
+            label: 'Enable Online Archive',
+            color: 'info',
+            modal: true,
+            modalUrl: `/api/ExecEnableArchive?TenantFilter=${tenant.defaultDomainName}&ID=${row.id}`,
+            modalMessage: 'Are you sure you want to enable the online archive for this user?',
+          },
+          {
             label: 'Set Out of Office',
             color: 'info',
             modal: true,
@@ -135,6 +142,13 @@ const Offcanvas = (row, rowIndex, formatExtraData) => {
             modal: true,
             modalUrl: `/api/ExecResetPass?MustChange=false&TenantFilter=${tenant.defaultDomainName}&ID=${row.id}`,
             modalMessage: 'Are you sure you want to reset the password for this user?',
+          },
+          {
+            label: 'Clear ImmutableId',
+            color: 'warning',
+            modal: true,
+            modalUrl: `/api/ExecClrImmId?TenantFilter=${tenant.defaultDomainName}&ID=${row.id}`,
+            modalMessage: 'Are you sure you want to clear the ImmutableId for this user?',
           },
           {
             label: 'Revoke all user sessions',
@@ -229,6 +243,14 @@ const Users = () => {
       title="Users"
       titleButton={titleButton}
       datatable={{
+        filterlist: [
+          { filterName: 'Enabled users', filter: '"accountEnabled":true' },
+          { filterName: 'AAD users', filter: '"onPremisesSyncEnabled":false' },
+          { filterName: 'Synced users', filter: '"onPremisesSyncEnabled":true' },
+          { filterName: 'Guest users', filter: '"usertype":"guest"' },
+          { filterName: 'Users with a license', filter: '"assignedLicenses":[{' },
+          { filterName: 'Users without a license', filter: '"assignedLicenses":[]' },
+        ],
         columns,
         path: '/api/ListUsers',
         reportName: `${tenant?.defaultDomainName}-Users`,
